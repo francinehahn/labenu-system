@@ -9,10 +9,10 @@ API REST developed with the objective of simulating Labenu system and practicing
 - <a href="https://github.com/mariafmf" target="_blank"><p>Maria Fernandez de Moura Ferro</p></a>
 
 ## 🔗Documentation
-https://documenter.getpostman.com/view/22375317/2s8Z73zWfy
+
 
 ## Deploy
-https://labenu-system.onrender.com
+
 
 ## ☑️Requests
 - Get All Instructors
