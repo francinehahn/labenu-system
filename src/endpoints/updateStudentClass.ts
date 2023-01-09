@@ -52,7 +52,7 @@ export async function updateStudentClass (req: Request, res: Response) {
         .from("LabeSystem_Class")
         .where("id", studentUpdated.class_id)
 
-        res.status(200).send(`Student's ID: ${studentId} updated from CLASS ${className[0].name.toUpperCase()} to CLASS ${newClassName[0].name.toUpperCase()}.`)
+        res.status(200).send("Success! Student's class has been updated.")
     
     } catch (error:any) {
         res.status(errorCode).send(error.message)
