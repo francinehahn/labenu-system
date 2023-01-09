@@ -1,7 +1,7 @@
 <h1 align="center">API Rest Labenu System</h1>
 
 ##  ℹ️About
-API REST developed with the objective of simulating Labenu system and practicing Node.js, TypeScript, Express, Knex, and MySQL. CRUD (Create, Read, Update and Delete) requests were built respecting the semantics and organization necessary for the elaboration of an API with RESTful principles.
+API REST developed with the objective of simulating Labenu system, an online programming school, and practicing Node.js, TypeScript, Express, Knex, and MySQL. CRUD (Create, Read, Update and Delete) requests were built respecting the semantics and organization necessary for the elaboration of an API with RESTful principles.
 
 ##  👩‍💻Developers
 - <a href="https://github.com/francinehahn" target="_blank"><p>Francine Hahn</p></a>
