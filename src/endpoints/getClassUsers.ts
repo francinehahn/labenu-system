@@ -3,18 +3,19 @@ import { ClassDatabase } from "../database/ClassDatabase"
 import InstructorDatabase from "../database/InstructorDatabase"
 import { StudentsDatabase } from "../database/StudentsDatabase"
 
-export const getClassUsers = async (req: Request, res: Response) => {
-    
+
+export async function getClassUsers (req: Request, res: Response) {
     let errorCode = 400
-    let classUsers = []
-    let classDB = new ClassDatabase()
-    let studentsDB = new StudentsDatabase()
-    let instructorsDB = new InstructorDatabase()
 
     try {
+        let classUsers = []
+        let classDB = new ClassDatabase()
+        let studentsDB = new StudentsDatabase()
+        let instructorsDB = new InstructorDatabase()
+
         let allClass = await classDB.getAll()
 
-        for(let classInfos of allClass){
+        for(let classInfos of allClass) {
             let students = await studentsDB.getClassStudents("LabeSystem_Students.class_id", `${classInfos.id}`)
             let instructors = await instructorsDB.getClassInstructors("LabeSystem_Instructors.class_id", `${classInfos.id}`)
 

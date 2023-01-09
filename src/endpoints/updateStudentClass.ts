@@ -4,11 +4,11 @@ import { StudentsDatabase } from "../database/StudentsDatabase"
 import { BaseDatabase } from "../database/BaseDatabase"
 
 
-export const updateStudentClass = async (req: Request, res: Response): Promise<void> => {
+export async function updateStudentClass (req: Request, res: Response) {
     let errorCode = 400
 
     try {
-        const studentId = req.params.studentId as string
+        const studentId = req.params.student_id as string
         const classId = req.body.newClassId as string
 
         const studentDatabase = new StudentsDatabase()
@@ -28,7 +28,7 @@ export const updateStudentClass = async (req: Request, res: Response): Promise<v
 
         if (!classId) {
             errorCode = 422
-            throw new Error("Provide new class' ID.")
+            throw new Error("Provide the new class ID.")
         }
 
         const classDataBase = new ClassDatabase()
@@ -37,7 +37,7 @@ export const updateStudentClass = async (req: Request, res: Response): Promise<v
 
         if (!findClass) {
             errorCode = 404
-            throw new Error("New class' ID not found.")
+            throw new Error("Class ID not found.")
         }
 
         const className = await BaseDatabase.connection.select("LabeSystem_Class.name")

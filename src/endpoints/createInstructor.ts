@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import Instructor from "../database/Instructor"
 import InstructorDatabase from "../database/InstructorDatabase"
 
+
 export async function createInstructor (req: Request, res: Response) {
     let errorCode = 400
     

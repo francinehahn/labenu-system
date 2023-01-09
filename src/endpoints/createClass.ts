@@ -1,13 +1,14 @@
 import { Request, Response } from "express"
 import { ClassDatabase } from "../database/ClassDatabase"
 
-export const createClass = async (req: Request, res: Response)=>{
+
+export async function createClass (req: Request, res: Response) {
     let errorCode = 400
-    let name = req.body.name
-    const id = Date.now().toString()
-    const module = "0"
 
     try {
+        let name = req.body.name
+        const id = Date.now().toString()
+        const module = "0"
 
         if(!name){
             errorCode = 422

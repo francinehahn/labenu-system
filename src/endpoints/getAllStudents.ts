@@ -3,7 +3,7 @@ import { StudentsDatabase } from "../database/StudentsDatabase"
 import { BaseDatabase } from "../database/BaseDatabase"
 
 
-export const getAllStudents = async (req: Request, res: Response): Promise<void> => {
+export async function getAllStudents (req: Request, res: Response) {
     let errorCode = 400
 
     try {
@@ -42,7 +42,6 @@ export const getAllStudents = async (req: Request, res: Response): Promise<void>
         if (students.length < 1) {
             errorCode = 404
             throw new Error("No students found with the given search parameter.")
-
         }
         
         res.status(200).send(students)

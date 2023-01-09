@@ -3,32 +3,34 @@ import { BaseDatabase } from "../database/BaseDatabase"
 import Class from "../database/Class"
 import { ClassDatabase } from "../database/ClassDatabase"
 
-export const getActiveClasses = async (req: Request, res: Response) =>{
+
+export async function getActiveClasses (req: Request, res: Response) {
     let errorCode = 400
-    let allClass = []
 
     try {
+        let allClass = []
         let classDB = new ClassDatabase()
         
         let result = await classDB.getAllClass("module", "not like", "0")
 
-        for(let iten of result){
+        for (let item of result) {
 
-            let allIntructors = await BaseDatabase.connection("LabeSystem_Instructors").select("id").whereLike("class_id", iten.id)
-            let allStudents = await BaseDatabase.connection("LabeSystem_Students").select("id").whereLike("class_id", iten.id)
+            let allIntructors = await BaseDatabase.connection("LabeSystem_Instructors").select("id").whereLike("class_id", item.id)
+            let allStudents = await BaseDatabase.connection("LabeSystem_Students").select("id").whereLike("class_id", item.id)
 
             const updateClass = new Class(
-                iten.id,
-                iten.name,
+                item.id,
+                item.name,
                 allIntructors,
                 allStudents,
-                iten.module
+                item.module
             )
 
             allClass.push(updateClass)
         }
 
         res.status(200).send(allClass)
+        
     } catch (err: any) {
         res.status(errorCode).send(err.message)
     }

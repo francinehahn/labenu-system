@@ -3,7 +3,8 @@ import Student from "../database/Student"
 import { StudentsDatabase } from "../database/StudentsDatabase"
 import { BaseDatabase } from "../database/BaseDatabase"
 
-export const createStudent = async (req: Request, res: Response): Promise<void> => {
+
+export async function createStudent (req: Request, res: Response) {
     let errorCode = 400
 
     try {

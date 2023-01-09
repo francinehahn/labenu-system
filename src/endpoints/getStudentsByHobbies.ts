@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import { BaseDatabase } from "../database/BaseDatabase"
 
 
-export const getStudentsByHobbies = async (req: Request, res: Response): Promise<void> => {
+export async function getStudentsByHobbies (req: Request, res: Response) {
     let errorCode = 400
 
     try {
@@ -16,9 +16,9 @@ export const getStudentsByHobbies = async (req: Request, res: Response): Promise
         .select()
         .where('hobby_name', 'like', `%${hobby}%`)
 
-        if (searchHobby.length < 1) {
+        if (searchHobby.length === 0) {
             errorCode = 404
-            throw new Error("No hobbies found with the given search parameter.");
+            throw new Error("No hobbies found with the given search parameter.")
         }
 
         for (let i = 0; i < searchHobby.length; i++) {

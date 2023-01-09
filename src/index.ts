@@ -29,25 +29,25 @@ app.get("/students", getAllStudents)
 app.post("/students", createStudent)
 
 //Update Student's Class
-app.patch("/students/:studentId", updateStudentClass)
+app.patch("/students/:student_id", updateStudentClass)
 
 //Get Users Zodiac Signs
-app.get("/students_intructors_signs", getUsersZodiacSigns)
+app.get("/zodiac-signs", getUsersZodiacSigns)
 
 //Get Students By Hobbies
 app.get("/hobbies", getStudentsByHobbies)
 
 //Search Active Classes
-app.get("/class", getActiveClasses)
-
-//Get Students and Instructors By Class
-app.get("/class/users", getClassUsers)
+app.get("/classes", getActiveClasses)
 
 //Create Class
-app.post("/class/create", createClass)
+app.post("/classes", createClass)
+
+//Get Students and Instructors By Class
+app.get("/classes/users", getClassUsers)
 
 //Update Class Module
-app.patch("/class/update/:id_class", updateClassModule)
+app.patch("/classes/:class_id", updateClassModule)
 
 
 

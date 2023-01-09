@@ -1,4 +1,4 @@
-<h1 align="center">API Rest LabeSystem</h1>
+<h1 align="center">API Rest Labenu System</h1>
 
 ##  ℹ️About
 API REST developed with the objective of simulating Labenu system and practicing Node.js, TypeScript, Express, Knex, and MySQL. CRUD (Create, Read, Update and Delete) requests were built respecting the semantics and organization necessary for the elaboration of an API with RESTful principles.
@@ -9,10 +9,7 @@ API REST developed with the objective of simulating Labenu system and practicing
 - <a href="https://github.com/mariafmf" target="_blank"><p>Maria Fernandez de Moura Ferro</p></a>
 
 ## 🔗Documentation
-
-
-## Deploy
-
+https://documenter.getpostman.com/view/25256145/2s8Z76uUD1
 
 ## ☑️Requests
 - Get All Instructors
@@ -36,10 +33,7 @@ API REST developed with the objective of simulating Labenu system and practicing
 - MySQL
 
 ## 🛰Running the project
-1. git clone https://github.com/future4code/Barros-labenu-system2.git
-2. cd Barros-labenu-system2
+1. git clone https://github.com/francinehahn/labenu-system.git
+2. cd labenu-system
 3. npm install
 4. npm run start
-
-## Image
-![Image-workbench](./print-workbench.png)
