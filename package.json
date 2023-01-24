@@ -7,7 +7,6 @@
     "start": "tsc && node ./build/index.js",
     "dev": "ts-node-dev ./src/index.ts"
   },
-  "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/cors": "^2.8.13",
