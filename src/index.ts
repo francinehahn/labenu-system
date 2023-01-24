@@ -1,7 +1,7 @@
 import app from "./app"
-import { classRouter } from "./routes/ClassRouter"
-import { instructorRouter } from "./routes/InstructorRouter"
-import { studentRouter } from "./routes/StudentRouter"
+import { classRouter } from "./routes/classRouter"
+import { instructorRouter } from "./routes/instructorRouter"
+import { studentRouter } from "./routes/studentRouter"
 
 
 app.use("/students", studentRouter)
