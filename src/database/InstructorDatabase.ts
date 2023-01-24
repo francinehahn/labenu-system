@@ -87,7 +87,7 @@ export default class InstructorDatabase extends BaseDatabase {
                 let filterInstructors = []
                 
                 for (let instructor of instructors) {
-                    const filterExpertise = instructor.expertise.filter(item => item === expertise)
+                    const filterExpertise = instructor.expertise.filter((item: string) => item === expertise)
                     
                     if (filterExpertise.length > 0) {
                         filterInstructors.push(instructor)
