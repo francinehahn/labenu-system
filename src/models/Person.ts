@@ -3,14 +3,14 @@ export default abstract class Person {
         protected id: string,
         protected name: string,
         protected email: string,
-        protected birth_date: Date,
-        protected class_id: string,
+        protected birthDate: Date,
+        protected classId: string,
     ) {
         this.id = id
         this.name = name
         this.email = email
-        this.birth_date = birth_date
-        this.class_id = class_id
+        this.birthDate = birthDate
+        this.classId = classId
     }
 
     public getId () {
@@ -26,10 +26,10 @@ export default abstract class Person {
     }
 
     public getBirthDate () {
-        return this.birth_date
+        return this.birthDate
     }
 
     public getClassId () {
-        return this.class_id
+        return this.classId
     }
 }
