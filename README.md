@@ -15,9 +15,7 @@ https://documenter.getpostman.com/view/25256145/2s8Z76uUD1
 - Get All Instructors
 - Get All Students
 - Get Students By Hobbies
-- Get Students and Instructors By Class
-- Get Users Zodiac Signs
-- Get Active Classes
+- Get All Classes
 - Update Instructor's Class
 - Update Student's Class
 - Update Class Module
