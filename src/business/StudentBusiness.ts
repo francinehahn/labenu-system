@@ -1,77 +1,126 @@
 import { StudentDatabase } from "../database/StudentDatabase"
-
+import { createStudentDTO } from "../models/createStudentDTO"
+import { returnStudentsByHobbiesDTO } from "../models/returnStudentsByHobbiesDTO"
+import Student from "../models/Student"
+import { updateStudentClassDTO } from "../models/updateStudentClassDTO"
+import { generateId } from "../services/generateId"
+import { CustomError } from "../error/CustomError"
+import { DuplicateEmail, MissingBirthDate, MissingHobbies, MissingUserEmail, MissingUserId, MissingUserName, NoHobbiesFound, NoStudentsFound, UserIdNotFound } from "../error/UserErrors"
+import { ClassIdNotFound, MissingClassId } from "../error/ClassErrors"
+import { ClassDatabase } from "../database/ClassDatabase"
 
 
 export class StudentBusiness {
-    createStudent = async (name: string, email: string, birthDate: string, hobbies: string[]) => {
-        if (!name) {
-            throw new Error("Provide the student's name.")
-        }
-
-        if (!email) {
-            throw new Error("Provide the student's email.")
-        }
-
-        if (!birthDate) {
-            throw new Error("Provide new student's birth date.")
-        }
-
-        const modifiedBirthDate = new Date(birthDate.toString().split("/").reverse().join("-"))
-
-        if (hobbies.length === 0) {
-            throw new Error("Provide at least one hobby.")
-        }
-
-        const id = Date.now().toString()
-        const classId = "0000000000000"
-
-        const studentDatabase = new StudentDatabase()
-        await studentDatabase.createStudent(id, name, email, modifiedBirthDate, classId, hobbies)
-    }
-
-    updateStudentClass = async (studentId: string, classId: string) => {
+    createStudent = async (input: createStudentDTO): Promise<void> => {
         try {
-            if (!studentId) {
-                throw new Error("Provide student's ID.")
+            if (!input.name) {
+                throw new MissingUserName()
             }
     
-            if (!classId) {
-                throw new Error("Provide the new class ID.")
+            if (!input.email) {
+                throw new MissingUserEmail()
+            }
+    
+            if (!input.birthDate) {
+                throw new MissingBirthDate()
+            }
+    
+            const studentDatabase = new StudentDatabase()
+            const searchEmail = await studentDatabase.getStudentByEmail(input.email)
+    
+            if (searchEmail.length > 0) {
+                throw new DuplicateEmail()
+            }
+    
+            const modifiedBirthDate = new Date(input.birthDate.toString().split("/").reverse().join(","))
+    
+            if (input.hobbies.length === 0) {
+                throw new MissingHobbies()
+            }
+    
+            const id = generateId()
+            const classId = "0000000000000"
+    
+            const newStudent = new Student(id, input.name, input.email, modifiedBirthDate, classId, input.hobbies)
+            await studentDatabase.createStudent(newStudent)
+
+        } catch (err: any) {
+            throw new CustomError(err.statusCode, err.message)
+        }
+    }
+
+
+    updateStudentClass = async (input: updateStudentClassDTO): Promise<void> => {
+        try {
+            if (!input.studentId) {
+                throw new MissingUserId()
+            }
+    
+            if (!input.classId) {
+                throw new MissingClassId()
             }
 
             const studentDatabase = new StudentDatabase()
-            await studentDatabase.updateStudentClass(studentId, classId)
+
+            const studentIdExists = await studentDatabase.getStudentById(input.studentId)
+    
+            if (studentIdExists.length === 0) {
+                throw new UserIdNotFound()
+            }
+
+            const classDatabase = new ClassDatabase()
+            const classIdExists = await classDatabase.getClassById(input.classId)
+
+            if (classIdExists.length === 0) {
+                throw new ClassIdNotFound()
+            }
+            await studentDatabase.updateStudentClass(input)
     
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
-    getAllStudents = async (search: string) => {
+
+    getAllStudents = async (search: string): Promise<Student[]> => {
         try {
             if (!search) {
                 search = "%"
             }
 
             const studentDatabase = new StudentDatabase()
+            const students = await studentDatabase.getAllStudents(search)
+            
+            if (students.length < 1) {
+                throw new NoStudentsFound()
+            }
+
             return await studentDatabase.getAllStudents(search)
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
-    getStudentsByHobbies = async (hobby: string) => {
+
+    getStudentsByHobbies = async (hobby: string): Promise<returnStudentsByHobbiesDTO> => {
         try {
             if (!hobby) {
                 hobby = "%"
             }
 
             const studentDatabase = new StudentDatabase()
+
+            let searchHobby = await studentDatabase.searchHobby(hobby)
+
+            if (searchHobby.length === 0) {
+                throw new NoHobbiesFound()
+            }
+
             return await studentDatabase.getStudentsByHobbies(hobby)
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 }

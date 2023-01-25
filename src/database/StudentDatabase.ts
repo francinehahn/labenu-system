@@ -1,20 +1,18 @@
 import { BaseDatabase } from "./BaseDatabase"
 import Student from "../models/Student"
+import { generateId } from "../services/generateId"
+import { updateStudentClassDTO } from "../models/updateStudentClassDTO"
+import { returnStudentsByHobbiesDTO } from "../models/returnStudentsByHobbiesDTO"
+import { CustomError } from "../error/CustomError"
+import { UserIdNotFound } from "../error/UserErrors"
+import { ClassIdNotFound } from "../error/ClassErrors"
 
 
 export class StudentDatabase extends BaseDatabase {
     TABLE_NAME = "LabeSystem_Students"
 
-    createStudent = async (id: string, name: string, email: string, birthDate: Date, classId: string, hobbies: string[]) => {
+    createStudent = async (newStudent: Student): Promise<void> => {
         try {
-            const searchEmail = await BaseDatabase.connection(this.TABLE_NAME).select().where("email", email)
-        
-            if (searchEmail.length > 0) {
-                throw new Error("E-mail address already in use.")
-            }
-
-            const newStudent = new Student (id, name, email, birthDate, classId, hobbies)
-
             await BaseDatabase.connection(this.TABLE_NAME).insert({
                 id: newStudent.getId(),
                 name: newStudent.getName(),
@@ -25,14 +23,14 @@ export class StudentDatabase extends BaseDatabase {
 
             const getHobbies = await BaseDatabase.connection("LabeSystem_Hobbies").select()
 
-            for (let i = 0; i < hobbies.length; i++) {
-                const findHobby = getHobbies.find(hobby => hobby.hobby_name.toLowerCase() === hobbies[i].toLowerCase())
+            for (let i = 0; i < newStudent.getHobbies().length; i++) {
+                const findHobby = getHobbies.find(hobby => hobby.hobby_name.toLowerCase() === newStudent.getHobbies()[i].toLowerCase())
                 
                 let hobbyId
                 if (!findHobby) {
                     const newHobby = {
                         id: Date.now().toString(),
-                        hobby_name: hobbies[i]
+                        hobby_name: newStudent.getHobbies()[i]
                     }
 
                     await BaseDatabase.connection("LabeSystem_Hobbies").insert(newHobby)
@@ -42,47 +40,31 @@ export class StudentDatabase extends BaseDatabase {
                 }
 
                 await BaseDatabase.connection("LabeSystem_Students_Hobbies").insert({
-                    id: Date.now().toString(), 
+                    id: generateId(),
                     student_id: newStudent.getId(),
                     hobby_id: hobbyId
                 })
             }
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
      
-    updateStudentClass = async (studentId: string, classId: string) => {
+
+    updateStudentClass = async (input: updateStudentClassDTO): Promise<void> => {
         try {
-            const studentsList = await BaseDatabase.connection(this.TABLE_NAME).select()
-            const findStudent = studentsList.find(student => student.id === studentId)
-    
-            if (!findStudent) {
-                throw new Error("Student's ID not found.")
-            }
-
-            const classesList = await BaseDatabase.connection("LabeSystem_Class").select()
-            const findClass = classesList.find(classes => classes.id === classId)
-
-            if (!findClass) {
-                throw new Error("Class ID not found.")
-            }
-
-            await BaseDatabase.connection(this.TABLE_NAME).where("id", studentId).update("class_id", classId)
+            await BaseDatabase.connection(this.TABLE_NAME).where("id", input.studentId).update("class_id", input.classId)
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
-    getAllStudents = async (search: string) => {
+
+    getAllStudents = async (search: string): Promise<Student[]> => {
         try {
             let students = await BaseDatabase.connection(this.TABLE_NAME).select().where("name", "like", `%${search}%`)
-            
-            if (students.length < 1) {
-                throw new Error("No students found with the given search parameter.")
-            }
 
             for (let i = 0; i < students.length; i++) {
                 const className = await BaseDatabase.connection.select("LabeSystem_Class.name")
@@ -96,7 +78,7 @@ export class StudentDatabase extends BaseDatabase {
                 .join("LabeSystem_Hobbies", "LabeSystem_Hobbies.id", "=", "LabeSystem_Students_Hobbies.hobby_id")
                 .where('student_id', students[i].id)
 
-                let studentHobbies = []
+                let studentHobbies: string[] = []
 
                 for (let y = 0; y < hobbies.length; y++) {
                     studentHobbies.push(hobbies[y].hobby_name)
@@ -108,19 +90,14 @@ export class StudentDatabase extends BaseDatabase {
             return students
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
-    getStudentsByHobbies = async (hobby: string) => {
+    
+    getStudentsByHobbies = async (hobby: string): Promise<returnStudentsByHobbiesDTO> => {
         try {
-            let searchHobby = await BaseDatabase.connection("LabeSystem_Hobbies")
-            .select()
-            .where('hobby_name', 'like', `%${hobby}%`)
-
-            if (searchHobby.length === 0) {
-                throw new Error("No hobbies were found with the given search parameter.")
-            }
+            const searchHobby = await this.searchHobby(hobby)
 
             for (let i = 0; i < searchHobby.length; i++) {
                 const searchStudents = await BaseDatabase.connection.select("LabeSystem_Students_Hobbies.student_id", "LabeSystem_Students.name")
@@ -134,7 +111,39 @@ export class StudentDatabase extends BaseDatabase {
             return searchHobby
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
+        }
+    }
+
+
+    searchHobby = async (hobby: string): Promise<any> => {
+        try {
+            const result = BaseDatabase.connection("LabeSystem_Hobbies")
+            .select()
+            .where('hobby_name', 'like', `%${hobby}%`)
+
+            return result
+
+        } catch (err: any) {
+            throw new CustomError(err.statusCode, err.message)
+        }
+    }
+
+    getStudentByEmail = async (email: string): Promise<any> => {
+        try {
+            return await BaseDatabase.connection(this.TABLE_NAME).where("email", email)
+        
+        } catch (err: any) {
+            throw new CustomError(err.statusCode, err.message)
+        }
+    }
+
+    getStudentById = async (id: string): Promise<any> => {
+        try {
+            return await BaseDatabase.connection(this.TABLE_NAME).where("id", id)
+        
+        } catch (err: any) {
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 }

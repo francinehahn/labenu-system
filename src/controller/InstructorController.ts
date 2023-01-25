@@ -1,45 +1,50 @@
 import { Request, Response } from "express";
 import { InstructorBusiness } from "../business/InstructorBusiness";
 import InstructorDatabase from "../database/InstructorDatabase";
+import { createInstructorDTO } from "../models/createInstructorDTO";
+import { updateInstructorClassDTO } from "../models/updateInstructorClassDTO";
 
 
 export class InstructorController {
-    createInstructor = async (req: Request, res: Response) => {
-        let errorCode = 400
-
+    createInstructor = async (req: Request, res: Response): Promise<void> => {
         try {
-            const {name, email, birthDate, expertise} = req.body
+            const input: createInstructorDTO = {
+                name: req.body.name,
+                email: req.body.email,
+                birthDate: req.body.birthDate,
+                expertise: req.body.expertise
+            }
 
             const instructorBusiness = new InstructorBusiness()
-            await instructorBusiness.createInstructor(name, email, birthDate, expertise)
+            await instructorBusiness.createInstructor(input)
             
             res.status(201).send("Success! The instructor has been registered.")
 
         } catch (err: any) {
-            res.status(errorCode).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 
-    updateInstructorClass = async (req: Request, res: Response) => {
-        let errorCode = 400
 
+    updateInstructorClass = async (req: Request, res: Response): Promise<void> => {
         try {
-            const instructorId = req.params.instructorId
-            const classId = req.body.classId
+            const input: updateInstructorClassDTO = {
+                instructorId: req.params.instructorId,
+                classId: req.body.classId
+            }
 
             const instructorBusiness = new InstructorBusiness()
-            await instructorBusiness.updateInstructorClass(instructorId, classId)
+            await instructorBusiness.updateInstructorClass(input)
 
             res.status(201).send("Success! The instructor's class id has been updated.")
 
         } catch (err: any) {
-            res.status(errorCode).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 
-    getAllInstructors = async (req: Request, res: Response) => {
-        let errorCode = 400
 
+    getAllInstructors = async (req: Request, res: Response): Promise<void> => {
         try {
             const expertise = req.query.expertise as string
 
@@ -49,7 +54,7 @@ export class InstructorController {
             res.status(200).send(instructors)
 
         } catch (err: any) {
-            res.status(errorCode).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 }

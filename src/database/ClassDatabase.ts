@@ -1,56 +1,61 @@
 import Class from "../models/Class"
+import {returnClassesDTO} from "../models/returnClassesDTO"
+import { updateClassModuleDTO } from "../models/updateClassModuleDTO"
 import { BaseDatabase } from "./BaseDatabase"
+import { CustomError } from "../error/CustomError"
 
 
 export class ClassDatabase extends BaseDatabase {
     TABLE_NAME = "LabeSystem_Class"  
 
-    createClass = async (name: string, newClass: Class) => {
-        try {
-            const getClasses = await BaseDatabase.connection(this.TABLE_NAME).select().where("name", name)
-
-            if (getClasses.length > 0) {
-                throw new Error("This class name already exists.")
-            }
-    
+    createClass = async (newClass: Class): Promise<void> => {
+        try {    
             await BaseDatabase.connection(this.TABLE_NAME).insert(newClass)
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
-    getAllClasses = async () => {
+
+    getAllClasses = async (): Promise<returnClassesDTO[]> => {
         try {
             const allClasses = await BaseDatabase.connection(this.TABLE_NAME).select()
-            let result = []
+            let result: returnClassesDTO[] = []
             
             for (let className of allClasses) {
-                const allIntructors = await BaseDatabase.connection("LabeSystem_Instructors").select("id", "name").where("class_id", className.id)
-                const allStudents = await BaseDatabase.connection("LabeSystem_Students").select("id", "name").where("class_id", className.id)
+                const allInstructors = await BaseDatabase.connection("LabeSystem_Instructors")
+                .select("id", "name").where("class_id", className.id)
+
+                const allStudents = await BaseDatabase.connection("LabeSystem_Students")
+                .select("id", "name").where("class_id", className.id)
  
-                result.push({id: className.id, name: className.name, allIntructors, allStudents, module: className.module})
+                result.push({id: className.id, name: className.name, allInstructors, allStudents, module: className.module})
             }
 
             return result
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
-    updateClassModule = async (classId: string, newModule: string) => {
+
+    updateClassModule = async (input: updateClassModuleDTO): Promise<void> => {
         try {
-            const classIdExists = await BaseDatabase.connection(this.TABLE_NAME).select().where("id", classId)
-
-            if (classIdExists.length === 0) {
-                throw new Error("The class does not exist.")    
-            }
-
-            await BaseDatabase.connection(this.TABLE_NAME).where("id", classId).update("module", newModule)
+            await BaseDatabase.connection(this.TABLE_NAME).where("id", input.classId).update("module", input.newModule)
         
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
+        }
+    }   
+
+    getClassById = async (id: string): Promise<any> => {
+        try {
+            return await BaseDatabase.connection(this.TABLE_NAME).where("id", id)
+        
+        } catch (err: any) {
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 }

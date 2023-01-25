@@ -6,7 +6,7 @@
       "outDir": "./build",        
       "rootDir": "./src",        
       "removeComments": true,    
-      "noImplicitAny": true,       
+      "noImplicitAny": false,       
       "noEmitOnError": true,
       "strict": true,
       "esModuleInterop": true,

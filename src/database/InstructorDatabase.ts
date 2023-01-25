@@ -1,20 +1,16 @@
 import Instructor from "../models/Instructor"
+import { updateInstructorClassDTO } from "../models/updateInstructorClassDTO"
+import { generateId } from "../services/generateId"
 import { BaseDatabase } from "./BaseDatabase"
+import { CustomError } from "../error/CustomError"
 
 
 export default class InstructorDatabase extends BaseDatabase {
     TABLE_NAME = "LabeSystem_Instructors"
 
-    createInstructor = async (id: string, name: string, email: string, birthDate: Date, classId: string, expertise: string[]) => {
+    createInstructor = async (newInstructor: Instructor): Promise<void> => {
         try {
-            const checkEmail = await BaseDatabase.connection(this.TABLE_NAME).select().where("email", email)
-        
-            if (checkEmail.length > 0) {
-                throw new Error("This email has already been registered.")
-            }
-
-            const newInstructor = new Instructor(id, name, email, birthDate, classId, expertise)
-            
+            console.log(newInstructor)
             await BaseDatabase.connection(this.TABLE_NAME).insert({
                 id: newInstructor.getId(),
                 name: newInstructor.getName(),
@@ -23,42 +19,37 @@ export default class InstructorDatabase extends BaseDatabase {
                 class_id: newInstructor.getClassId()
             })
 
-            for (let i = 0; expertise.length > i; i++) {
-                const expertise_id = await BaseDatabase.connection("LabeSystem_Expertise").select("id").where("expertise_name", expertise[i])
+            for (let i = 0; i < newInstructor.getExpertise().length; i++) {
+                const expertiseId = await BaseDatabase.connection("LabeSystem_Expertise")
+                    .select("id")
+                    .where("expertise_name", newInstructor.getExpertise()[i])
 
-                const id = Date.now().toString()
+                const id = generateId()
+
                 await BaseDatabase.connection("LabeSystem_Instructors_Expertise").insert({
                     id,
                     instructor_id: newInstructor.getId(),
-                    expertise_id: expertise_id[0].id
+                    expertise_id: expertiseId[0].id
                 })
             }
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
-    updateInstructorClass = async (instructorId: string, classId: string) => {
+
+    updateInstructorClass = async (input: updateInstructorClassDTO): Promise<void> => {
         try {
-            const instructorIdExists = await BaseDatabase.connection(this.TABLE_NAME).select().where("id", instructorId)           
-            if (instructorIdExists.length === 0) {
-                throw new Error("This instructor id does not exist.")
-            }
-
-            const classIdExists = await BaseDatabase.connection("LabeSystem_Class").select().where("id", classId)
-            if (classIdExists.length === 0) {
-                throw new Error("This class id does not exist.")
-            }
-
-            await BaseDatabase.connection(this.TABLE_NAME).where("id", instructorId).update("class_id", classId)
+            await BaseDatabase.connection(this.TABLE_NAME).where("id", input.instructorId).update("class_id", input.classId)
         
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
-    getAllInstructors = async (expertise: string) => {
+
+    getAllInstructors = async (expertise: string): Promise<Instructor[]> => {
         try {
             let instructors = await BaseDatabase.connection(this.TABLE_NAME).select()
 
@@ -74,7 +65,7 @@ export default class InstructorDatabase extends BaseDatabase {
                 .join("LabeSystem_Expertise", "LabeSystem_Expertise.id", "=", "LabeSystem_Instructors_Expertise.expertise_id")
                 .where('instructor_id', instructors[i].id)
 
-                let instructorsExpertise = []
+                let instructorsExpertise: string[] = []
 
                 for (let y = 0; y < expertise.length; y++) {
                     instructorsExpertise.push(expertise[y].expertise_name)
@@ -84,7 +75,7 @@ export default class InstructorDatabase extends BaseDatabase {
             }
 
             if (expertise !== "%") {
-                let filterInstructors = []
+                let filterInstructors: any = []
                 
                 for (let instructor of instructors) {
                     const filterExpertise = instructor.expertise.filter((item: string) => item === expertise)
@@ -94,18 +85,31 @@ export default class InstructorDatabase extends BaseDatabase {
                     }
                 }
 
-                if (filterInstructors.length === 0) {
-                    throw new Error("No instructors found with the given search parameter.")
-                }
-
                 return filterInstructors
-
             } else {
                 return instructors
             }    
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
+        }
+    }
+
+    getInstructorByEmail = async (email: string): Promise<any> => {
+        try {
+            return await BaseDatabase.connection(this.TABLE_NAME).where("email", email)
+        
+        } catch (err: any) {
+            throw new CustomError(err.statusCode, err.message)
+        }
+    }
+
+    getInstructorById = async (id: string): Promise<any> => {
+        try {
+            return await BaseDatabase.connection(this.TABLE_NAME).where("id", id)
+        
+        } catch (err: any) {
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 }

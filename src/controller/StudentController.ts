@@ -1,49 +1,50 @@
 import { Request, Response } from "express"
 import { StudentBusiness } from "../business/StudentBusiness"
+import { createStudentDTO } from "../models/createStudentDTO"
+import Student from "../models/Student"
+import { updateStudentClassDTO } from "../models/updateStudentClassDTO"
 
 
 export class StudentController {
-    createStudent = async (req: Request, res: Response) => {
-        let errorCode = 400
-    
+    createStudent = async (req: Request, res: Response): Promise<void> => {
         try {
-            const name = req.body.name
-            const email = req.body.email
-            const birthDate = req.body.birthDate
-            const hobbies: string[] = req.body.hobbies
+            const input: createStudentDTO = {
+                name: req.body.name,
+                email: req.body.email,
+                birthDate: req.body.birthDate,
+                hobbies: req.body.hobbies
+            }
     
             const studentBusiness = new StudentBusiness()
-            await studentBusiness.createStudent(name, email, birthDate, hobbies)
+            await studentBusiness.createStudent(input)
     
             res.status(201).send("Success! The student has been registered.")
     
         } catch (err: any) {
-            res.status(errorCode).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 
-    updateStudentClass = async (req: Request, res: Response) => {
-        let errorCode = 400
-    
+    updateStudentClass = async (req: Request, res: Response): Promise<void> => {
         try {
-            const studentId = req.params.studentId as string
-            const classId = req.body.classId as string
+            const input: updateStudentClassDTO = {
+                studentId: req.params.studentId,
+                classId: req.body.classId
+            }
     
             const studentBusiness = new StudentBusiness()
-            await studentBusiness.updateStudentClass(studentId, classId)
+            await studentBusiness.updateStudentClass(input)
 
             res.status(200).send("Success! Student's class has been updated.")
 
         } catch (err: any) {
-            res.status(errorCode).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 
-    getAllStudents = async (req: Request, res: Response) => {
-        let errorCode = 400
-    
+    getAllStudents = async (req: Request, res: Response): Promise<void> => {
         try {
-            let search = req.query.search as string
+            const search = req.query.search as string
 
             const studentBusiness = new StudentBusiness()
             const students = await studentBusiness.getAllStudents(search)
@@ -51,13 +52,11 @@ export class StudentController {
             res.status(200).send(students)
 
         } catch (err: any) {
-            res.status(errorCode).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 
-    getStudentsByHobbies = async (req: Request, res: Response) => {
-        let errorCode = 400
-    
+    getStudentsByHobbies = async (req: Request, res: Response): Promise<void> => {
         try {
             const hobby = req.query.hobby as string
 
@@ -66,7 +65,7 @@ export class StudentController {
             res.status(200).send(students)
 
         } catch (err: any) {
-            res.status(errorCode).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 }

@@ -5,11 +5,11 @@ export default class Student extends Person {
         id: string,
         name: string,
         email: string,
-        birthDate: Date,
-        classId: string,
+        birth_date: Date,
+        class_id: string,
         private hobbies: string[]
     ) {
-        super (id, name, email, birthDate, classId)
+        super (id, name, email, birth_date, class_id)
         this.hobbies = hobbies
     }
 
