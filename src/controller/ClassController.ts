@@ -1,5 +1,4 @@
 import { Request, Response } from "express"
-import { v4 } from "uuid"
 import { ClassBusiness } from "../business/ClassBusiness"
 import { updateClassModuleDTO } from "../models/updateClassModuleDTO"
 

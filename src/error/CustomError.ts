@@ -1,5 +1,5 @@
 export class CustomError extends Error {
-    constructor (code: number, message: string) {
-        super (code, message)
+    constructor (public statusCode: number, public message: string) {
+        super (message)
     }
 }

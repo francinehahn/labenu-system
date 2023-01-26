@@ -6,6 +6,7 @@ import { updateStudentClassDTO } from "../models/updateStudentClassDTO"
 
 
 export class StudentController {
+    
     createStudent = async (req: Request, res: Response): Promise<void> => {
         try {
             const input: createStudentDTO = {
@@ -25,6 +26,7 @@ export class StudentController {
         }
     }
 
+
     updateStudentClass = async (req: Request, res: Response): Promise<void> => {
         try {
             const input: updateStudentClassDTO = {
@@ -42,6 +44,7 @@ export class StudentController {
         }
     }
 
+
     getAllStudents = async (req: Request, res: Response): Promise<void> => {
         try {
             const search = req.query.search as string
@@ -55,6 +58,7 @@ export class StudentController {
             res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
+
 
     getStudentsByHobbies = async (req: Request, res: Response): Promise<void> => {
         try {

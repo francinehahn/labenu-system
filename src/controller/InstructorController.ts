@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
-import { InstructorBusiness } from "../business/InstructorBusiness";
-import InstructorDatabase from "../database/InstructorDatabase";
-import { createInstructorDTO } from "../models/createInstructorDTO";
-import { updateInstructorClassDTO } from "../models/updateInstructorClassDTO";
+import { Request, Response } from "express"
+import { InstructorBusiness } from "../business/InstructorBusiness"
+import { createInstructorDTO } from "../models/createInstructorDTO"
+import { updateInstructorClassDTO } from "../models/updateInstructorClassDTO"
 
 
 export class InstructorController {
+
     createInstructor = async (req: Request, res: Response): Promise<void> => {
         try {
             const input: createInstructorDTO = {
