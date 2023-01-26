@@ -8,7 +8,7 @@ export class MissingClassId extends CustomError {
 
 export class ClassIdNotFound extends CustomError {
     constructor () {
-        super(404, "This class id does not exist.")
+        super(404, "Class id not found.")
     }
 }
 

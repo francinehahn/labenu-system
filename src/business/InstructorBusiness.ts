@@ -14,11 +14,14 @@ export class InstructorBusiness {
         try {
             if (!input.name) {
                 throw new MissingUserName()
-            } else if (!input.email) {
+            }
+            if (!input.email) {
                 throw new MissingUserEmail()
-            } else if (!input.birthDate) {
+            }
+            if (!input.birthDate) {
                 throw new MissingBirthDate()
-            } else if (!input.expertise) {
+            }
+            if (!input.expertise) {
                 throw new MissingExpertise()
             }
     
