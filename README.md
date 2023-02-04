@@ -51,7 +51,7 @@ Create a file .env and complete the following variables:
     DB_PASSWORD = ""
     DB_DATABASE = ""
 
-    PORT = 3000
+    PORT = 3003
   </code>
 </pre>
 
