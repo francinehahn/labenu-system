@@ -1,3 +1,4 @@
+import { generateId } from "../services/generateId"
 import {connection} from "./connection"
 
 
@@ -58,8 +59,17 @@ const createTable = () => connection.raw(`
     
 const insertIntoTable = () => connection.raw(`
     INSERT INTO LabeSystem_Class VALUES ("0000000000000", "Undefined", "0");
+
+    INSERT INTO LabeSystem_Expertise VALUES (${generateId()}, "React");
+    INSERT INTO LabeSystem_Expertise VALUES (${generateId()}, "Redux");
+    INSERT INTO LabeSystem_Expertise VALUES (${generateId()}, "CSS");
+    INSERT INTO LabeSystem_Expertise VALUES (${generateId()}, "Testes unitários");
+    INSERT INTO LabeSystem_Expertise VALUES (${generateId()}, "TypeScript");
+    INSERT INTO LabeSystem_Expertise VALUES (${generateId()}, "Programação Orientada a Objetos");
+    INSERT INTO LabeSystem_Expertise VALUES (${generateId()}, "Backend");
+    
 `).then(() => {
-    console.log("Valor inserido.")
+    console.log("Valores inseridos.")
     connection.destroy()
 }).catch(printError)
 
