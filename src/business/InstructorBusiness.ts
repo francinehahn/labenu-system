@@ -34,7 +34,7 @@ export class InstructorBusiness {
             }
 
             const id = generateId()
-            const classId = '0000000000000'
+            const classId = "00undefined00"
 
             const newInstructor = new Instructor(id, input.name, input.email, input.birthDate, classId, input.expertise)
             await this.instructorDatabase.createInstructor(newInstructor)

@@ -37,7 +37,7 @@ export class StudentBusiness {
             }
     
             const id = generateId()
-            const classId = "0000000000000"
+            const classId = "00undefined00"
     
             const newStudent = new Student(id, input.name, input.email, modifiedBirthDate, classId, input.hobbies)
             await this.studentDatabase.createStudent(newStudent)
