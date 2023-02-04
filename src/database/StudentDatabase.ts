@@ -1,11 +1,7 @@
 import { BaseDatabase } from "./BaseDatabase"
-import Student from "../models/Student"
 import { generateId } from "../services/generateId"
-import { updateStudentClassDTO } from "../models/updateStudentClassDTO"
-import { returnStudentsByHobbiesDTO } from "../models/returnStudentsByHobbiesDTO"
+import { Student, updateStudentClassDTO, returnStudentsByHobbiesDTO } from "../models/Student"
 import { CustomError } from "../error/CustomError"
-import { UserIdNotFound } from "../error/UserErrors"
-import { ClassIdNotFound } from "../error/ClassErrors"
 
 
 export class StudentDatabase extends BaseDatabase {

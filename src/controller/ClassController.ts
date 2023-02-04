@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { ClassBusiness } from "../business/ClassBusiness"
-import { updateClassModuleDTO } from "../models/updateClassModuleDTO"
+import { updateClassModuleDTO } from "../models/Class"
 
 
 export class ClassController {

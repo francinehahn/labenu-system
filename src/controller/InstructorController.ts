@@ -1,7 +1,6 @@
 import { Request, Response } from "express"
 import { InstructorBusiness } from "../business/InstructorBusiness"
-import { createInstructorDTO } from "../models/createInstructorDTO"
-import { updateInstructorClassDTO } from "../models/updateInstructorClassDTO"
+import { createInstructorDTO, updateInstructorClassDTO } from "../models/Instructor"
 
 
 export class InstructorController {

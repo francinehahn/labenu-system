@@ -1,6 +1,6 @@
 import Person from "./Person"
 
-export default class Instructor extends Person {
+export class Instructor extends Person {
     constructor (
         id: string,
         name: string,
@@ -16,4 +16,16 @@ export default class Instructor extends Person {
     public getExpertise () {
         return this.expertise
     }
+}
+
+export interface createInstructorDTO {
+    name: string,
+    email: string,
+    birthDate: Date,
+    expertise: string[]
+}
+
+export interface updateInstructorClassDTO {
+    instructorId: string,
+    classId: string
 }

@@ -1,7 +1,5 @@
 import { ClassDatabase } from "../database/ClassDatabase"
-import Class from "../models/Class"
-import { returnClassesDTO } from "../models/returnClassesDTO"
-import { updateClassModuleDTO } from "../models/updateClassModuleDTO"
+import { Class, returnClassesDTO, updateClassModuleDTO } from "../models/Class"
 import { generateId } from "../services/generateId"
 import { CustomError } from "../error/CustomError"
 import { ClassIdNotFound, DuplicateClassName, InvalidClassModuleType, InvalidClassModuleValue, MissingClassId, MissingClassModule, MissingClassName } from "../error/ClassErrors"

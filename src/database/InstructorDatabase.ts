@@ -1,5 +1,4 @@
-import Instructor from "../models/Instructor"
-import { updateInstructorClassDTO } from "../models/updateInstructorClassDTO"
+import { Instructor, updateInstructorClassDTO } from "../models/Instructor"
 import { generateId } from "../services/generateId"
 import { BaseDatabase } from "./BaseDatabase"
 import { CustomError } from "../error/CustomError"

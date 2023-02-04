@@ -1,6 +1,6 @@
-import Class from "../models/Class"
-import {returnClassesDTO} from "../models/returnClassesDTO"
-import { updateClassModuleDTO } from "../models/updateClassModuleDTO"
+import {Class} from "../models/Class"
+import {returnClassesDTO} from "../models/Class"
+import { updateClassModuleDTO } from "../models/Class"
 import { BaseDatabase } from "./BaseDatabase"
 import { CustomError } from "../error/CustomError"
 
