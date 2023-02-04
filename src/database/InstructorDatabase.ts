@@ -52,7 +52,7 @@ export default class InstructorDatabase extends BaseDatabase implements Instruct
     getAllInstructors = async (expertise: string): Promise<Instructor[]> => {
         try {
             let instructors = await BaseDatabase.connection(this.TABLE_NAME).select()
-
+            
             for (let i = 0; i < instructors.length; i++) {
                 const className = await BaseDatabase.connection.select("LabeSystem_Class.name")
                 .from("LabeSystem_Class")
@@ -64,7 +64,7 @@ export default class InstructorDatabase extends BaseDatabase implements Instruct
                 .from("LabeSystem_Instructors_Expertise")
                 .join("LabeSystem_Expertise", "LabeSystem_Expertise.id", "=", "LabeSystem_Instructors_Expertise.expertise_id")
                 .where('instructor_id', instructors[i].id)
-
+                
                 let instructorsExpertise: string[] = []
 
                 for (let y = 0; y < expertise.length; y++) {

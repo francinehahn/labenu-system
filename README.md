@@ -31,7 +31,38 @@ https://documenter.getpostman.com/view/25256145/2s8Z76uUD1
 - MySQL
 
 ## 🛰Running the project
-1. git clone https://github.com/francinehahn/labenu-system.git
-2. cd labenu-system
-3. npm install
-4. npm run start
+<pre>
+  <code>git clone https://github.com/francinehahn/labenu-system.git</code>
+</pre>
+
+<pre>
+  <code>cd labenu-system</code>
+</pre>
+
+<pre>
+  <code>npm install</code>
+</pre>
+
+Create a file .env and complete the following variables:
+<pre>
+  <code>
+    DB_HOST = ""
+    DB_USER = ""
+    DB_PASSWORD = ""
+    DB_SCHEMA = ""
+
+    PORT = 3000
+  </code>
+</pre>
+
+To add the tables to your database, run the following command:
+<pre>
+  <code>npm run migrations</code>
+</pre>
+
+To initialize the project:
+<pre>
+  <code>npm run start</code>
+</pre>
+
+Finally, you can use Postman or another similar tool to test the endpoints.
