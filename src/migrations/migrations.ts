@@ -54,10 +54,14 @@ const createTable = () => connection.raw(`
         FOREIGN KEY (hobby_id) REFERENCES LabeSystem_Hobbies(id)
     );
     
+`).then(() => console.log('Tabelas criadas.')).catch(printError)
+    
+const insertIntoTable = () => connection.raw(`
+    INSERT INTO LabeSystem_Class VALUES ("0000000000000", "Undefined", "0");
 `).then(() => {
-    console.log('Tabelas criadas.')
+    console.log("Valor inserido.")
     connection.destroy()
 }).catch(printError)
-    
 
 createTable()
+insertIntoTable()

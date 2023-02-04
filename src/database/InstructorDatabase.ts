@@ -10,7 +10,6 @@ export default class InstructorDatabase extends BaseDatabase implements Instruct
 
     createInstructor = async (newInstructor: Instructor): Promise<void> => {
         try {
-            console.log(newInstructor)
             await BaseDatabase.connection(this.TABLE_NAME).insert({
                 id: newInstructor.getId(),
                 name: newInstructor.getName(),
