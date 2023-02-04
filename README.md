@@ -49,7 +49,7 @@ Create a file .env and complete the following variables:
     DB_HOST = ""
     DB_USER = ""
     DB_PASSWORD = ""
-    DB_SCHEMA = ""
+    DB_DATABASE = ""
 
     PORT = 3000
   </code>
