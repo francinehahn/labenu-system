@@ -2,9 +2,10 @@ import { Instructor, updateInstructorClassDTO } from "../models/Instructor"
 import { generateId } from "../services/generateId"
 import { BaseDatabase } from "./BaseDatabase"
 import { CustomError } from "../error/CustomError"
+import { InstructorRepository } from "../business/InstructorRepository"
 
 
-export default class InstructorDatabase extends BaseDatabase {
+export default class InstructorDatabase extends BaseDatabase implements InstructorRepository {
     TABLE_NAME = "LabeSystem_Instructors"
 
     createInstructor = async (newInstructor: Instructor): Promise<void> => {
@@ -94,18 +95,9 @@ export default class InstructorDatabase extends BaseDatabase {
         }
     }
 
-    getInstructorByEmail = async (email: string): Promise<any> => {
+    getInstructor = async (column: string, value: string): Promise<any> => {
         try {
-            return await BaseDatabase.connection(this.TABLE_NAME).where("email", email)
-        
-        } catch (err: any) {
-            throw new CustomError(err.statusCode, err.message)
-        }
-    }
-
-    getInstructorById = async (id: string): Promise<any> => {
-        try {
-            return await BaseDatabase.connection(this.TABLE_NAME).where("id", id)
+            return await BaseDatabase.connection(this.TABLE_NAME).where(column, value)
         
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)

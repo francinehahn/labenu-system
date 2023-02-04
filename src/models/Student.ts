@@ -18,7 +18,7 @@ export class Student extends Person {
     }
 }
 
-export interface createStudentDTO {
+export interface inputStudentDTO {
     name: string,
     email: string,
     birthDate: Date,

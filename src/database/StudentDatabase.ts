@@ -2,9 +2,10 @@ import { BaseDatabase } from "./BaseDatabase"
 import { generateId } from "../services/generateId"
 import { Student, updateStudentClassDTO, returnStudentsByHobbiesDTO } from "../models/Student"
 import { CustomError } from "../error/CustomError"
+import { StudentRepository } from "../business/StudentRepository"
 
 
-export class StudentDatabase extends BaseDatabase {
+export class StudentDatabase extends BaseDatabase implements StudentRepository {
     TABLE_NAME = "LabeSystem_Students"
 
     createStudent = async (newStudent: Student): Promise<void> => {
@@ -125,18 +126,9 @@ export class StudentDatabase extends BaseDatabase {
         }
     }
 
-    getStudentByEmail = async (email: string): Promise<any> => {
+    getStudent = async (column: string, value: string): Promise<any> => {
         try {
-            return await BaseDatabase.connection(this.TABLE_NAME).where("email", email)
-        
-        } catch (err: any) {
-            throw new CustomError(err.statusCode, err.message)
-        }
-    }
-
-    getStudentById = async (id: string): Promise<any> => {
-        try {
-            return await BaseDatabase.connection(this.TABLE_NAME).where("id", id)
+            return await BaseDatabase.connection(this.TABLE_NAME).where(column, value)
         
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)

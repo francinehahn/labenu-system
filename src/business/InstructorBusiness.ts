@@ -1,14 +1,16 @@
-import { ClassDatabase } from "../database/ClassDatabase"
-import InstructorDatabase from "../database/InstructorDatabase"
-import { Instructor, createInstructorDTO, updateInstructorClassDTO } from "../models/Instructor"
+import { Instructor, inputInstructorDTO, updateInstructorClassDTO } from "../models/Instructor"
 import { generateId } from "../services/generateId"
 import { CustomError } from "../error/CustomError"
 import { DuplicateEmail, InvalidExpertise, MissingBirthDate, MissingExpertise, MissingUserEmail, MissingUserId, MissingUserName, NoInstructorsFound, UserIdNotFound } from "../error/UserErrors"
 import { ClassIdNotFound, MissingClassId } from "../error/ClassErrors"
+import { InstructorRepository } from "./InstructorRepository"
+import { ClassRepository } from "./ClassRepository"
 
 
 export class InstructorBusiness {
-    createInstructor = async (input: createInstructorDTO): Promise<void> => {
+    constructor (private instructorDatabase: InstructorRepository, private classDatabase: ClassRepository) {}
+
+    createInstructor = async (input: inputInstructorDTO): Promise<void> => {
         try {
             if (!input.name) {
                 throw new MissingUserName()
@@ -25,8 +27,7 @@ export class InstructorBusiness {
     
             input.birthDate = new Date(input.birthDate.toString().split("/").reverse().join(","))
             
-            const instructorDatabase = new InstructorDatabase()
-            const checkEmail = await instructorDatabase.getInstructorByEmail(input.email)
+            const checkEmail = await this.instructorDatabase.getInstructor("email", input.email)
         
             if (checkEmail.length > 0) {
                 throw new DuplicateEmail()
@@ -36,7 +37,7 @@ export class InstructorBusiness {
             const classId = '0000000000000'
 
             const newInstructor = new Instructor(id, input.name, input.email, input.birthDate, classId, input.expertise)
-            await instructorDatabase.createInstructor(newInstructor)
+            await this.instructorDatabase.createInstructor(newInstructor)
 
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
@@ -54,22 +55,20 @@ export class InstructorBusiness {
                 throw new MissingClassId()
             }
 
-            const instructorDatabase = new InstructorDatabase()
-            const instructorIdExists = await instructorDatabase.getInstructorById(input.instructorId)
+            const instructorIdExists = await this.instructorDatabase.getInstructor("id", input.instructorId)
      
             if (instructorIdExists.length === 0) {
                 throw new UserIdNotFound()
             }
 
-            const classDatabase = new ClassDatabase()
-            const allClasses = await classDatabase.getAllClasses()
+            const allClasses = await this.classDatabase.getAllClasses()
             const classIdExists = allClasses.filter(item => item.id.toString() === input.classId)
 
             if (classIdExists.length === 0) {
                 throw new ClassIdNotFound()
             }
 
-            await instructorDatabase.updateInstructorClass(input)
+            await this.instructorDatabase.updateInstructorClass(input)
 
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
@@ -87,8 +86,7 @@ export class InstructorBusiness {
                 expertise = "%"
             }
 
-            const instructorDatabase = new InstructorDatabase()
-            const result = await instructorDatabase.getAllInstructors(expertise)
+            const result = await this.instructorDatabase.getAllInstructors(expertise)
             
             if (result.length === 0) {
                 throw new NoInstructorsFound()

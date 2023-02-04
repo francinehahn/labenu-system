@@ -4,13 +4,13 @@ import { updateClassModuleDTO } from "../models/Class"
 
 
 export class ClassController {
-    
+    constructor (private classBusiness: ClassBusiness) {}
+
     createClass = async (req: Request, res: Response): Promise<void> => {
         try {
             const name: string = req.body.name
             
-            const classBusiness = new ClassBusiness()
-            await classBusiness.createClass(name)
+            await this.classBusiness.createClass(name)
             
             res.status(201).send("Success! The class has been registered.")
 
@@ -22,8 +22,7 @@ export class ClassController {
 
     getAllClasses = async (req: Request, res: Response): Promise<void> => {
         try {
-            const classBusiness = new ClassBusiness()
-            const allClasses = await classBusiness.getAllClasses()
+            const allClasses = await this.classBusiness.getAllClasses()
             res.status(200).send(allClasses)
             
         } catch (err: any) {
@@ -39,8 +38,7 @@ export class ClassController {
                 newModule: req.body.newModule
             }
     
-            const classBusiness = new ClassBusiness()
-            await classBusiness.updateClassModule(input)
+            await this.classBusiness.updateClassModule(input)
     
             res.status(200).send("Success! Class module has been updated.")
             

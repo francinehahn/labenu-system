@@ -1,21 +1,21 @@
 import { Request, Response } from "express"
 import { InstructorBusiness } from "../business/InstructorBusiness"
-import { createInstructorDTO, updateInstructorClassDTO } from "../models/Instructor"
+import { inputInstructorDTO, updateInstructorClassDTO } from "../models/Instructor"
 
 
 export class InstructorController {
+    constructor (private instructorBusiness: InstructorBusiness) {}
 
     createInstructor = async (req: Request, res: Response): Promise<void> => {
         try {
-            const input: createInstructorDTO = {
+            const input: inputInstructorDTO = {
                 name: req.body.name,
                 email: req.body.email,
                 birthDate: req.body.birthDate,
                 expertise: req.body.expertise
             }
 
-            const instructorBusiness = new InstructorBusiness()
-            await instructorBusiness.createInstructor(input)
+            await this.instructorBusiness.createInstructor(input)
             
             res.status(201).send("Success! The instructor has been registered.")
 
@@ -32,10 +32,9 @@ export class InstructorController {
                 classId: req.body.classId
             }
 
-            const instructorBusiness = new InstructorBusiness()
-            await instructorBusiness.updateInstructorClass(input)
+            await this.instructorBusiness.updateInstructorClass(input)
 
-            res.status(201).send("Success! The instructor's class id has been updated.")
+            res.status(201).send("Success! The instructor's class has been updated.")
 
         } catch (err: any) {
             res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
@@ -46,9 +45,7 @@ export class InstructorController {
     getAllInstructors = async (req: Request, res: Response): Promise<void> => {
         try {
             const expertise = req.query.expertise as string
-
-            const instructorBusiness = new InstructorBusiness()
-            const instructors = await instructorBusiness.getAllInstructors(expertise)
+            const instructors = await this.instructorBusiness.getAllInstructors(expertise)
 
             res.status(200).send(instructors)
 

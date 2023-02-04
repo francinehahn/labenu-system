@@ -1,21 +1,21 @@
 import { Request, Response } from "express"
 import { StudentBusiness } from "../business/StudentBusiness"
-import { createStudentDTO, updateStudentClassDTO } from "../models/Student"
+import { inputStudentDTO, updateStudentClassDTO } from "../models/Student"
 
 
 export class StudentController {
-    
+    constructor (private studentBusiness: StudentBusiness) {}
+
     createStudent = async (req: Request, res: Response): Promise<void> => {
         try {
-            const input: createStudentDTO = {
+            const input: inputStudentDTO = {
                 name: req.body.name,
                 email: req.body.email,
                 birthDate: req.body.birthDate,
                 hobbies: req.body.hobbies
             }
     
-            const studentBusiness = new StudentBusiness()
-            await studentBusiness.createStudent(input)
+            await this.studentBusiness.createStudent(input)
     
             res.status(201).send("Success! The student has been registered.")
     
@@ -32,10 +32,9 @@ export class StudentController {
                 classId: req.body.classId
             }
     
-            const studentBusiness = new StudentBusiness()
-            await studentBusiness.updateStudentClass(input)
+            await this.studentBusiness.updateStudentClass(input)
 
-            res.status(200).send("Success! Student's class has been updated.")
+            res.status(200).send("Success! The student's class has been updated.")
 
         } catch (err: any) {
             res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
@@ -47,9 +46,7 @@ export class StudentController {
         try {
             const search = req.query.search as string
 
-            const studentBusiness = new StudentBusiness()
-            const students = await studentBusiness.getAllStudents(search)
-
+            const students = await this.studentBusiness.getAllStudents(search)
             res.status(200).send(students)
 
         } catch (err: any) {
@@ -62,8 +59,7 @@ export class StudentController {
         try {
             const hobby = req.query.hobby as string
 
-            const studentBusiness = new StudentBusiness()
-            const students = await studentBusiness.getStudentsByHobbies(hobby)
+            const students = await this.studentBusiness.getStudentsByHobbies(hobby)
             res.status(200).send(students)
 
         } catch (err: any) {

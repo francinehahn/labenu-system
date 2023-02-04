@@ -3,9 +3,10 @@ import {returnClassesDTO} from "../models/Class"
 import { updateClassModuleDTO } from "../models/Class"
 import { BaseDatabase } from "./BaseDatabase"
 import { CustomError } from "../error/CustomError"
+import { ClassRepository } from "../business/ClassRepository"
 
 
-export class ClassDatabase extends BaseDatabase {
+export class ClassDatabase extends BaseDatabase implements ClassRepository {
     TABLE_NAME = "LabeSystem_Class"  
 
     createClass = async (newClass: Class): Promise<void> => {
